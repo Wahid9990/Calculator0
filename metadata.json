@@ -1,0 +1,6 @@
+{
+  "name": "Dynamic Grid Calc",
+  "description": "A powerful, fluid spreadsheet-like grid calculator with editable dates, dynamic column pricing, real-time calculations, and PDF/Excel exports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
