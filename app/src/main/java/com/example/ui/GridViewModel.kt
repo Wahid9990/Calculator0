@@ -297,6 +297,12 @@ class GridViewModel(private val repository: GridRepository) : ViewModel() {
         }
     }
 
+    fun deleteColumn(colId: Long) {
+        viewModelScope.launch {
+            repository.deleteColumnById(colId)
+        }
+    }
+
     fun deleteSelectedColumn() {
         val colId = selectedColId.value
         if (colId != null) {

@@ -765,20 +765,91 @@ fun GridCalculatorScreen(
                                             }
 
                                             // --- Table Totals block ---
-                                            // 2. Total Price Row (Table grand totals in the corner)
+                                            // 1. Total Pieces Row (Just above the Total Cash row)
                                             Row(
-                                                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+                                                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
                                                 Box(
                                                     modifier = Modifier
                                                         .width(120.dp)
                                                         .height(40.dp)
+                                                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
                                                         .border(0.5.dp, MaterialTheme.colorScheme.outlineVariant)
                                                         .padding(horizontal = 6.dp),
                                                     contentAlignment = Alignment.CenterStart
                                                 ) {
-                                                    Text("Total Cash", fontWeight = FontWeight.Black, fontSize = 11.sp, color = Color(0xFF1E293B))
+                                                    Text(
+                                                        text = "Total Pieces",
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize = 11.sp,
+                                                        color = MaterialTheme.colorScheme.onSurface
+                                                    )
+                                                }
+
+                                                columns.forEach { col ->
+                                                    var colPieces = 0
+                                                    rows.forEach { r ->
+                                                        colPieces += cellsMap[Pair(r.id, col.id)] ?: 0
+                                                    }
+
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .width(105.dp)
+                                                            .height(40.dp)
+                                                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f))
+                                                            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                                                            .padding(4.dp),
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                        Text(
+                                                            text = colPieces.toString(),
+                                                            fontWeight = FontWeight.Bold,
+                                                            fontSize = 11.sp,
+                                                            color = MaterialTheme.colorScheme.onSurface
+                                                        )
+                                                    }
+                                                }
+
+                                                // Individual sheet grand total pieces
+                                                Box(
+                                                    modifier = Modifier
+                                                        .width(110.dp)
+                                                        .height(40.dp)
+                                                        .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f))
+                                                        .border(1.dp, MaterialTheme.colorScheme.outline)
+                                                        .padding(horizontal = 8.dp),
+                                                    contentAlignment = Alignment.CenterEnd
+                                                ) {
+                                                    Text(
+                                                        text = totalPiecesLocal.toString(),
+                                                        fontWeight = FontWeight.Black,
+                                                        fontSize = 12.sp,
+                                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                                    )
+                                                }
+                                            }
+
+                                            // 2. Total Cash Row (Table grand totals in the corner)
+                                            Row(
+                                                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .width(120.dp)
+                                                        .height(40.dp)
+                                                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
+                                                        .border(0.5.dp, MaterialTheme.colorScheme.outlineVariant)
+                                                        .padding(horizontal = 6.dp),
+                                                    contentAlignment = Alignment.CenterStart
+                                                ) {
+                                                    Text(
+                                                        text = "Total Cash",
+                                                        fontWeight = FontWeight.Black,
+                                                        fontSize = 11.sp,
+                                                        color = MaterialTheme.colorScheme.onSurface
+                                                    )
                                                 }
 
                                                 columns.forEach { col ->
@@ -792,8 +863,8 @@ fun GridCalculatorScreen(
                                                         modifier = Modifier
                                                             .width(105.dp)
                                                             .height(40.dp)
-                                                            .background(Color(0xFFF0FDF4))
-                                                            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                                                            .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
+                                                            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
                                                             .padding(4.dp),
                                                         contentAlignment = Alignment.Center
                                                     ) {
@@ -801,7 +872,7 @@ fun GridCalculatorScreen(
                                                             text = String.format("%.2f", colPrice),
                                                             fontWeight = FontWeight.ExtraBold,
                                                             fontSize = 11.sp,
-                                                            color = Color(0xFF166534)
+                                                            color = MaterialTheme.colorScheme.primary
                                                         )
                                                     }
                                                 }
@@ -811,7 +882,7 @@ fun GridCalculatorScreen(
                                                     modifier = Modifier
                                                         .width(110.dp)
                                                         .height(40.dp)
-                                                        .background(Color(0xFFBBF7D0))
+                                                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f))
                                                         .border(1.dp, MaterialTheme.colorScheme.outline)
                                                         .padding(horizontal = 8.dp),
                                                     contentAlignment = Alignment.CenterEnd
@@ -819,8 +890,8 @@ fun GridCalculatorScreen(
                                                     Text(
                                                         text = String.format("%.2f", grandTotalLocal),
                                                         fontWeight = FontWeight.Black,
-                                                        fontSize = 13.sp,
-                                                        color = Color(0xFF14532D)
+                                                        fontSize = 12.sp,
+                                                        color = MaterialTheme.colorScheme.onPrimaryContainer
                                                     )
                                                 }
                                             }
@@ -2166,10 +2237,28 @@ fun GridCalculatorScreen(
             AlertDialog(
                 onDismissRequest = { showEditColPriceDialogState = null },
                 title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Select Predefined Price", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                            Icon(Icons.Default.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Select Predefined Price", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        }
+                        IconButton(
+                            onClick = {
+                                viewModel.deleteColumn(colId)
+                                showEditColPriceDialogState = null
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete Column",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
                 },
                 text = {
